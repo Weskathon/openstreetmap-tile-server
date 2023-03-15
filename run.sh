@@ -41,6 +41,10 @@ if [ ! -f /data/style/mapnik.xml ]; then
 fi
 
 if [ "$1" == "import" ]; then
+    if [ -f /var/lib/postgresql/$PG_VERSION/main/.databaseImported ]; then 
+      echo "database already initialized"
+      exit 0
+    fi
     # Ensure that database directory is in right state
     mkdir -p /data/database/postgres/
     chown renderer: /data/database/
@@ -191,6 +195,8 @@ if [ "$1" == "run" ]; then
     wait "$child"
 
     service postgresql stop
+    
+    touch /var/lib/postgresql/14/main/.databaseImported
 
     exit 0
 fi
